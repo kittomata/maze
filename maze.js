@@ -299,6 +299,24 @@
       }
       updateTouchMovement();
     }
+    function resetInputState() {
+  // Reset keyboard keys
+  keys.forward = false;
+  keys.backward = false;
+  keys.strafeLeft = false;
+  keys.strafeRight = false;
+  keys.turnLeft = false;
+  keys.turnRight = false;
+  // Clear any ongoing touches and update key states
+  for (const id in ongoingTouches) {
+    delete ongoingTouches[id];
+  }
+  // Update touch movement to reflect cleared touches, if available
+  if (typeof updateTouchMovement === 'function') {
+    updateTouchMovement();
+  }
+}
+
     canvas.addEventListener('touchend', handleEnd);
     canvas.addEventListener('touchcancel', handleEnd);
   }
@@ -526,7 +544,8 @@
     const cellY = Math.floor(player.y);
     if (cellX === exitX && cellY === exitY) {
       // Show winning message and restart with increased difficulty
-      setTimeout(() => {
+          resetInputState();
+setTimeout(() => {
         stage += 1;
         alert('Congratulations! You reached the exit. A more challenging maze will now be generated.');
         initGame();
